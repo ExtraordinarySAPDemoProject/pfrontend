@@ -15,7 +15,7 @@
           <router-link to='/register'> 找回密码</router-link>
         </div>
       </div>
-      <el-button class="login_button" type="primary" :loading=this.button_disabled @click="doLogin">提交</el-button>
+      <el-button class="login_button" type="primary" :loading=this.button_disabled @click.native="doLogin">提交</el-button>
       <div class="no_account">
         <router-link to='/register'> 没有账号</router-link>
       </div>
@@ -42,6 +42,13 @@
       }
     },
     methods: {
+      setCookie: function(c_username, c_password) {
+        document.cookie = c_username + ";" + c_password;
+      },
+      getCookie: function() {
+        var c = document.cookie.split(";");
+        return c[0];
+      },
       doLogin: function () {
         this.button_disabled = true;
         if (this.account == "") {
@@ -54,48 +61,12 @@
           this.$message('请输入密码');
         }
         else {
-          axios.post(this.url, {"username": this.account, "password": this.pwd}).then(response => {
-            if (response.data.status == 200) {
-            }
-            else
-              throw response;
-            if (response.data.status == 200) {
-              this.$message({
-                message: ('登录成功'),
-                type: 'success'
-              });
-              this.$store.commit('setToken', response.data.result.tokenid);
-              this.$store.commit('setUsername', this.account);
-
-              this.$store.commit('setRealname', response.data.result.realname);
-              this.$store.commit('setMobile', response.data.result.mobile);
-              this.$store.commit('setEmail', response.data.result.email);
-
-              sessionStorage.setItem('tokenid', response.data.result.tokenid);
-              sessionStorage.setItem('username', this.account);
-              sessionStorage.setItem('realname', response.data.result.realname);
-              sessionStorage.setItem('mobile', response.data.result.mobile);
-              sessionStorage.setItem('email', response.data.result.email);
-
-              this.account = '';
-              this.pwd = '';
-              this.$router.push('/center');
-            }
-          }).catch(function (error) {
-            if (error) {
-              switch (error.data.status) {
-                case "401":
-                  swal("Warning", "密码错误!", "warning");
-                  break;
-                case "404":
-                  swal("Warning", "用户名不存在!", "warning");
-                  break;
-              }
-              if (error.status == 500) {
-                swal("Error", "服务器错误", "error");
-              }
-            }
-          });
+          this.setCookie(this.account,this.pwd)
+          this.$store.commit('setToken', "1");
+          this.$store.commit('setUsername', this.account);
+          sessionStorage.setItem('tokenid', "1");
+          sessionStorage.setItem('username', this.account);
+          this.$router.push('/center');
         }
         this.button_disabled = false;
       }

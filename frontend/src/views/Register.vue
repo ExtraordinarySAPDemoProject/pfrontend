@@ -12,7 +12,7 @@
     <el-input  placeholder="请再次输入密码" type="password" v-model="pwd_rep"></el-input>
     <el-input  placeholder="请输入邮箱" type="email" v-model="email"></el-input>
     <el-checkbox style="margin-left: 5px; padding-top: 5px; float: left" v-model="checked">我已同意相关协议</el-checkbox>
-  <el-button class="login_button" type="primary" @click="regist">提交</el-button>
+  <el-button class="login_button" type="primary" @click.native="regist">提交</el-button>
   </div>
 </div>
 
@@ -80,32 +80,14 @@ export default {
         });
       }
       else{
-        axios.post(this.url, {"username": this.account, "email": this.email, "password": this.pwd}).then(function (response){
-          if(response.status == 200){}
-          else
-            throw response;
-          if(response.data.status == 201){
-            this.$message({
-              message: '注册成功',
-              type: 'success'
-            });
-            this.account='';
-            this.pwd= '';
-            this.pwd_rep= '';
-            this.$router.push('/center');
-          }
-        }.bind(this)).catch(function(error){
-          if(error.response){
-            switch (error.response.status) {
-                  case 400:
-                    alert('注册失败');
-                    break;
-                  case 500:
-                    alert('服务器错误');
-                    break;
-            }
-          }
+        this.$message({
+          message: '注册成功',
+          type: 'success'
         });
+        this.account='';
+        this.pwd= '';
+        this.pwd_rep= '';
+        this.$router.push('/center');
       }
     }
   }

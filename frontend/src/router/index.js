@@ -49,9 +49,6 @@ router.beforeEach((to, from, next) => {
         else if(sessionStorage.tokenid){
             store.state.user.tokenid = sessionStorage.tokenid;
             store.state.user.username = sessionStorage.username;
-            store.state.user.realname = sessionStorage.realname;
-            store.state.user.mobile = sessionStorage.mobile;
-            store.state.user.email = sessionStorage.email;
             next()
         }
         else {// 没登录则跳转到登录界面
